@@ -53,10 +53,10 @@ __attribute__((weak)) void dynamic_macro_record_end_user(int8_t direction) { dyn
 void dynamic_macro_record_start(keyrecord_t **macro_pointer, keyrecord_t *macro_buffer) {
     dprintln("dynamic macro recording: started");
 
-    dynamic_macro_record_start_user();
-
     clear_keyboard();
     layer_clear();
+
+    dynamic_macro_record_start_user();
     *macro_pointer = macro_buffer;
 }
 

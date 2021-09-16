@@ -14,7 +14,6 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-// clang-format off
 #include QMK_KEYBOARD_H
 #include "keymap_helpers.h"
 
@@ -48,21 +47,26 @@ enum layer_names {
 #define MODS_ALT   ((get_mods() | get_oneshot_mods()) & MOD_MASK_ALT)
 #define MODS_GUI   ((get_mods() | get_oneshot_mods()) & MOD_MASK_GUI)
 
+#define LAY_EFF (MO(_EFFECTS))
+#define LAY_UTI (TG(_UTILITY))
+#define LAY_DFU (MO(_DFUMODE))
 
+
+// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT(KC_ESC,   KC_F1,   KC_F2,   KC_F3,  KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  MG_F17,       KC_MUTE,
                       KC_GRV,   KC_1,    KC_2,    KC_3,   KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,      KC_HOME,
                       KC_TAB,   KC_Q,    KC_W,    KC_E,   KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,      KC_PGUP,
                       KC_CAPS,  KC_A,    KC_S,    KC_D,   KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,                KC_PGDN,
                       KC_LSFT,  KC_Z,    KC_X,    KC_C,   KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,        KC_END,
-                      KC_LCTL,  KC_LALT, KC_LGUI,                  KC_SPC,                    KC_RGUI, KC_RALT, MO(_EFFECTS),     KC_LEFT, KC_DOWN, KC_RGHT),
+                      KC_LCTL,  KC_LALT, KC_LGUI,                  KC_SPC,                    KC_RGUI, KC_RALT, LAY_EFF,          KC_LEFT, KC_DOWN, KC_RGHT),
 
   [_EFFECTS] = LAYOUT(_______, KC_F13,  KC_F14,  KC_F15,  KC_F16,  RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, MG_F18,       _______,
                       _______, SET_MP,  SET_MB,  SET_MR,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_RMOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               RGB_SPI,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______,          RGB_SAI,      RGB_SPD,
-                      _______, _______, _______,                   _______,              TG(_UTILITY), MO(_DFUMODE), _______,     RGB_HUD, RGB_SAD, RGB_HUI),
+                      _______, _______, _______,                   _______,                   LAY_UTI, LAY_DFU, _______,          RGB_HUD, RGB_SAD, RGB_HUI),
 
   [_UTILITY] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, DM_PLY1, DM_PLY2, DM_REC1, DM_REC2, DM_RSTP,      _______,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
@@ -78,6 +82,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      _______,
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 };
+// clang-format on
+
+
 // Runs constantly in the background, in a loop.
 void rgb_matrix_indicators_user(void) {
     if (rgb_matrix_get_flags() & (LED_FLAG_KEYLIGHT | LED_FLAG_MODIFIER)) {
@@ -113,6 +120,12 @@ void rgb_matrix_indicators_user(void) {
 
 // Called on start
 void dynamic_macro_record_start_user(void) {
+    dprint("-- Recording Initiallized\n");
+}
+
+
+// Called on start
+void dynamic_macro_record_begin_user(void) {
     dprint("-- Recording Started\n");
     layer_on(_UTILITY);
 }
@@ -217,4 +230,3 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true; // Process all other keycodes normally
     }
 }
-// clang-format on

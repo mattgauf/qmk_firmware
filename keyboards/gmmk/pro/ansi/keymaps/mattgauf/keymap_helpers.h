@@ -18,6 +18,9 @@
 #include <inttypes.h>
 #include "rgb_matrix_types.h"
 
+/* Color Functions */
+void rgb_matrix_set_color_flags(uint8_t red, uint8_t green, uint8_t blue, uint8_t flags);
+
 /* Color Codes */
 #define LEDWHIT 0xff, 0xff, 0xff
 #define LED_RED 0xff, 0x00, 0x00
@@ -34,9 +37,6 @@
 #define LEDPINK 0xff, 0x00, 0x80
 #define LEDBLAC 0x00, 0x00, 0x00
 #define LED_OFF 0x00, 0x00, 0x00
-
-/* Color Functions */
-void rgb_matrix_set_color_flags(uint8_t red, uint8_t green, uint8_t blue, uint8_t flags);
 
 /* Function Row */
 #define PIN_ESC      0

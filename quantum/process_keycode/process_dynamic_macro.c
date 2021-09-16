@@ -31,6 +31,8 @@ void dynamic_macro_led_blink(void) {
 
 __attribute__((weak)) void dynamic_macro_record_start_user(void) { dynamic_macro_led_blink(); }
 
+__attribute__((weak)) void dynamic_macro_record_begin_user(void) { dynamic_macro_led_blink(); }
+
 __attribute__((weak)) void dynamic_macro_play_user(int8_t direction) { dynamic_macro_led_blink(); }
 
 __attribute__((weak)) void dynamic_macro_record_key_user(int8_t direction, keyrecord_t *record) { dynamic_macro_led_blink(); }
@@ -53,10 +55,13 @@ __attribute__((weak)) void dynamic_macro_record_end_user(int8_t direction) { dyn
 void dynamic_macro_record_start(keyrecord_t **macro_pointer, keyrecord_t *macro_buffer) {
     dprintln("dynamic macro recording: started");
 
+    dynamic_macro_record_start_user();
+
     clear_keyboard();
     layer_clear();
 
-    dynamic_macro_record_start_user();
+    dynamic_macro_record_begin_user();
+
     *macro_pointer = macro_buffer;
 }
 

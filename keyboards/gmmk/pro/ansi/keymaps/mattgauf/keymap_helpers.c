@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "keymap_helpers.h"
 #include "rgb_matrix.h"
 
 void rgb_matrix_set_color_flags(uint8_t red, uint8_t green, uint8_t blue, uint8_t flags) {

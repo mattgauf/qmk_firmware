@@ -40,12 +40,15 @@ enum layer_names {
 // static uint8_t  rgb_pin_fn_column[]       = {PIN_DEL,PIN_PGUP,PIN_PGDN,PIN_END};
 // static uint8_t  rgb_pin_left_underglow[]  = {PIN_LED_L01,PIN_LED_L02,PIN_LED_L03,PIN_LED_L04,PIN_LED_L05,PIN_LED_L06,PIN_LED_L07,PIN_LED_L08};
 // static uint8_t  rgb_pin_right_underglow[] = {PIN_LED_L11,PIN_LED_L12,PIN_LED_L13,PIN_LED_L14,PIN_LED_L15,PIN_LED_L16,PIN_LED_L17,PIN_LED_L18};
+static bool     blink_light;
+static uint16_t blink_timer;
 
 
 #define MODS_SHIFT ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT)
 #define MODS_CTRL  ((get_mods() | get_oneshot_mods()) & MOD_MASK_CTRL)
 #define MODS_ALT   ((get_mods() | get_oneshot_mods()) & MOD_MASK_ALT)
 #define MODS_GUI   ((get_mods() | get_oneshot_mods()) & MOD_MASK_GUI)
+
 
 #define LAY_EFF (MO(_EFFECTS))
 #define LAY_UTI (TG(_UTILITY))
@@ -86,9 +89,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 
 // Runs constantly in the background, in a loop.
-void rgb_matrix_indicators_user(void) {
-    if (rgb_matrix_get_flags() & (LED_FLAG_KEYLIGHT | LED_FLAG_MODIFIER)) {
+void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    const uint8_t CURRENT_FLAGS = rgb_matrix_get_flags();
 
+    if (CURRENT_FLAGS != LED_FLAG_NONE) {
         if (IS_LAYER_ON(_UTILITY)) {
             rgb_matrix_set_color(PIN_F9,    LEDGREE);
             rgb_matrix_set_color(PIN_F10,   LEDGREE);
@@ -110,10 +114,15 @@ void rgb_matrix_indicators_user(void) {
                 break;
         }
 
+        if (blink_light && timer_elapsed(blink_timer) >= 1000) {
+            blink_timer = timer_read();
+
+            rgb_matrix_set_flags(CURRENT_FLAGS ^ LED_FLAG_UNDERGLOW);
+        }
+
         if (host_keyboard_led_state().caps_lock) {
             rgb_matrix_set_color(PIN_CAPS, RGB_WHITE);
         }
-
     }
 }
 
@@ -128,12 +137,17 @@ void dynamic_macro_record_start_user(void) {
 void dynamic_macro_record_begin_user(void) {
     dprint("-- Recording Started\n");
     layer_on(_UTILITY);
+
+    blink_light = true;
+    blink_timer = timer_read();
 }
 
 
 // Called on end
 void dynamic_macro_record_end_user(int8_t direction) {
     dprint("-- Recording Ended\n");
+
+    blink_light = false;
 }
 
 

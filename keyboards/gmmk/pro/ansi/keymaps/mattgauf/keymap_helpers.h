@@ -22,6 +22,7 @@
 void rgb_matrix_set_color_flags(uint8_t red, uint8_t green, uint8_t blue, uint8_t flags);
 
 /* Color Codes */
+#define LED_MAX 0xff, 0xff, 0xff
 #define LEDWHIT 0xff, 0xff, 0xff
 #define LED_RED 0xff, 0x00, 0x00
 #define LEDORAN 0xff, 0x29, 0x00

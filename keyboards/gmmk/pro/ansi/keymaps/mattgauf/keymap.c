@@ -46,6 +46,7 @@ enum layer_names {
 #define MODS_ALT   ((get_mods() | get_oneshot_mods()) & MOD_MASK_ALT)
 #define MODS_GUI   ((get_mods() | get_oneshot_mods()) & MOD_MASK_GUI)
 
+
 #define LAY_EFF (MO(_EFFECTS))
 #define LAY_UTI (TG(_UTILITY))
 #define LAY_DFU (MO(_DFUMODE))

@@ -21,7 +21,8 @@
 enum custom_codes {
     MG_F17 = SAFE_RANGE,
     MG_F18,
-    MG_F19
+    MG_F19,
+    MG_TOG
 };
 
 
@@ -31,6 +32,9 @@ enum layer_names {
     _UTILITY,
     _DFUMODE
 };
+
+
+static bool is_navigate = false;
 
 
 #define MODS_SHIFT ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT)
@@ -53,7 +57,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       KC_LSFT,  KC_Z,    KC_X,    KC_C,   KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,        KC_END,
                       KC_LCTL,  KC_LALT, KC_LGUI,                  KC_SPC,                    KC_RGUI, KC_RALT, LAY_EFF,          KC_LEFT, KC_DOWN, KC_RGHT),
 
-  [_EFFECTS] = LAYOUT(_______, KC_F13,  KC_F14,  KC_F15,  KC_F16,  RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, MG_F18,       _______,
+  [_EFFECTS] = LAYOUT(_______, KC_F13,  KC_F14,  KC_F15,  KC_F16,  RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, MG_F18,       MG_TOG,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_RMOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               RGB_SPI,
@@ -169,10 +173,20 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 }
             }
         } else {
-            if (clockwise) {
-                tap_code(KC_VOLU);
+            if (is_navigate) {
+                clear_mods();
+                if (clockwise) {
+                    tap_code(KC_RIGHT);
+                } else {
+                    tap_code(KC_LEFT);
+                }
+                set_mods(curr_mod);
             } else {
-                tap_code(KC_VOLD);
+                if (clockwise) {
+                    tap_code(KC_VOLU);
+                } else {
+                    tap_code(KC_VOLD);
+                }
             }
         }
     }
@@ -196,6 +210,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case MG_F19:
             if (record->event.pressed) {
                 tap_code16(HYPR(KC_F19));
+            }
+            return false;
+        case MG_TOG:
+            if (record->event.pressed) {
+                is_navigate = !is_navigate;
             }
             return false;
         case RGB_TOG:

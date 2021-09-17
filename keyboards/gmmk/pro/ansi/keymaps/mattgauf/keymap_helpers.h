@@ -18,8 +18,14 @@
 #include <inttypes.h>
 #include "rgb_matrix_types.h"
 
+/* LED matrix color flag helpers */
+#define RGB_FLAG_KEYS (LED_FLAG_KEYLIGHT | LED_FLAG_MODIFIER)
+#define RGB_FLAG_CASE (LED_FLAG_UNDERGLOW)
+
 /* Color Functions */
-void rgb_matrix_set_color_flags(uint8_t red, uint8_t green, uint8_t blue, uint8_t flags);
+void rgb_matrix_set_color_keys(uint8_t index, uint8_t red, uint8_t green, uint8_t blue);
+void rgb_matrix_set_color_case(uint8_t red, uint8_t green, uint8_t blue);
+void rgb_matrix_set_color_both(uint8_t red, uint8_t green, uint8_t blue);
 
 /* Color Codes */
 #define LED_MAX 0xff, 0xff, 0xff

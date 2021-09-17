@@ -17,10 +17,29 @@
 #include "keymap_helpers.h"
 #include "rgb_matrix.h"
 
-void rgb_matrix_set_color_flags(uint8_t red, uint8_t green, uint8_t blue, uint8_t flags) {
-    for (uint8_t ii = 0; ii < DRIVER_LED_TOTAL; ii++) {
-        if (g_led_config.flags[ii] & flags) {
-            rgb_matrix_set_color(ii, red, green, blue);
+
+// static uint8_t  rgb_pin_fn_column[]      = {PIN_DEL,PIN_PGUP,PIN_PGDN,PIN_END};
+static uint8_t  rgb_pin_underglow_west[] = {PIN_LED_L01,PIN_LED_L02,PIN_LED_L03,PIN_LED_L04,PIN_LED_L05,PIN_LED_L06,PIN_LED_L07,PIN_LED_L08};
+static uint8_t  rgb_pin_underglow_east[] = {PIN_LED_L11,PIN_LED_L12,PIN_LED_L13,PIN_LED_L14,PIN_LED_L15,PIN_LED_L16,PIN_LED_L17,PIN_LED_L18};
+
+
+void rgb_matrix_set_color_keys(uint8_t index, uint8_t red, uint8_t green, uint8_t blue) {
+    if (rgb_matrix_get_flags() & RGB_FLAG_KEYS) {
+        rgb_matrix_set_color(index, red, green, blue);
+    }
+}
+
+void rgb_matrix_set_color_case(uint8_t red, uint8_t green, uint8_t blue) {
+    if (rgb_matrix_get_flags() & RGB_FLAG_CASE) {
+        for (uint8_t ii = 0; ii < 8; ii++) {
+            rgb_matrix_set_color(rgb_pin_underglow_west[ii], red, green, blue);
+            rgb_matrix_set_color(rgb_pin_underglow_east[ii], red, green, blue);
         }
+    }
+}
+
+void rgb_matrix_set_color_both(uint8_t red, uint8_t green, uint8_t blue) {
+    if (rgb_matrix_get_flags() & (RGB_FLAG_KEYS | RGB_FLAG_CASE)) {
+        rgb_matrix_set_color_all(red, green, blue);
     }
 }

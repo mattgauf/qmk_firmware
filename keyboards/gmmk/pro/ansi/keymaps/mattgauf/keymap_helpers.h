@@ -27,6 +27,14 @@ void rgb_matrix_set_color_keys(uint8_t index, uint8_t red, uint8_t green, uint8_
 void rgb_matrix_set_color_case(uint8_t red, uint8_t green, uint8_t blue);
 void rgb_matrix_set_color_both(uint8_t red, uint8_t green, uint8_t blue);
 
+/* Encoder functions */
+void encoder_action_user_volume(uint8_t modifier, bool clockwise);
+void encoder_action_user_history(uint8_t modifier, bool clockwise);
+void encoder_action_user_navigate_tabs(uint8_t modifier, bool clockwise);
+void encoder_action_user_navigate_apps(uint8_t modifier, bool clockwise);
+void encoder_action_user_navigate(uint8_t modifier, bool clockwise);
+void encoder_action_user_rgb_val(uint8_t modifier, bool clockwise);
+
 /* Color Codes */
 #define LED_MAX 0xff, 0xff, 0xff
 #define LEDWHIT 0xff, 0xff, 0xff

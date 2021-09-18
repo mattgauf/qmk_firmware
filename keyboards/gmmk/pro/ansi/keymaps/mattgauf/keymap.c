@@ -34,7 +34,7 @@ enum layer_names {
 };
 
 
-static bool is_navigate = false;
+static bool encoder_navigation = false;
 
 
 #define MODS_SHIFT ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT)
@@ -139,54 +139,24 @@ void dynamic_macro_play_user(int8_t direction) {
 
 // Runs on encoder event
 bool encoder_update_user(uint8_t index, bool clockwise) {
-    uint8_t curr_mod = get_mods();
+    uint8_t modifier = get_mods();
 
     if (IS_LAYER_ON(_EFFECTS)) {
-        if (clockwise) {
-            rgb_matrix_increase_val();
-        } else {
-            rgb_matrix_decrease_val();
-        }
+        encoder_action_user_rgb_val(modifier, clockwise);
     } else {
         if (MODS_GUI) {
             if (MODS_GUI && MODS_SHIFT) {
-                clear_mods();
-                if (clockwise) {
-                    tap_code16(LSG(KC_Z));
-                } else {
-                    tap_code16(LGUI(KC_Z));
-                }
-                set_mods(curr_mod);
+                encoder_action_user_history(modifier, clockwise);
             } else if (MODS_GUI && MODS_ALT) {
-                clear_mods();
-                if (clockwise) {
-                    tap_code(KC_RIGHT);
-                } else {
-                    tap_code(KC_LEFT);
-                }
-                set_mods(curr_mod);
+                encoder_action_user_navigate_tabs(modifier, clockwise);
             } else {
-                if (clockwise) {
-                    tap_code16(LGUI(KC_TAB));
-                } else {
-                    tap_code16(LSG(KC_TAB));
-                }
+                encoder_action_user_navigate_apps(modifier, clockwise);
             }
         } else {
-            if (is_navigate) {
-                clear_mods();
-                if (clockwise) {
-                    tap_code(KC_RIGHT);
-                } else {
-                    tap_code(KC_LEFT);
-                }
-                set_mods(curr_mod);
+            if (encoder_navigation) {
+                encoder_action_user_navigate(modifier, clockwise);
             } else {
-                if (clockwise) {
-                    tap_code(KC_VOLU);
-                } else {
-                    tap_code(KC_VOLD);
-                }
+                encoder_action_user_volume(modifier, clockwise);
             }
         }
     }
@@ -214,7 +184,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case MG_TOG:
             if (record->event.pressed) {
-                is_navigate = !is_navigate;
+                encoder_navigation = !encoder_navigation;
             }
             return false;
         case RGB_TOG:

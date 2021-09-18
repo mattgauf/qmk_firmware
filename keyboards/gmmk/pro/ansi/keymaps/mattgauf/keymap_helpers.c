@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include QMK_KEYBOARD_H
 #include "keymap_helpers.h"
 #include "rgb_matrix.h"
 
@@ -41,5 +42,59 @@ void rgb_matrix_set_color_case(uint8_t red, uint8_t green, uint8_t blue) {
 void rgb_matrix_set_color_both(uint8_t red, uint8_t green, uint8_t blue) {
     if (rgb_matrix_get_flags() & (RGB_FLAG_KEYS | RGB_FLAG_CASE)) {
         rgb_matrix_set_color_all(red, green, blue);
+    }
+}
+
+void encoder_action_user_volume(uint8_t modifier, bool clockwise) {
+    clear_mods();
+    if (clockwise) {
+        tap_code(KC_VOLU);
+    } else {
+        tap_code(KC_VOLD);
+    }
+    set_mods(modifier);
+}
+
+void encoder_action_user_history(uint8_t modifier, bool clockwise) {
+    clear_mods();
+    if (clockwise) {
+        tap_code16(LSG(KC_Z));
+    } else {
+        tap_code16(LGUI(KC_Z));
+    }
+    set_mods(modifier);
+}
+
+void encoder_action_user_navigate_tabs(uint8_t modifier, bool clockwise) {
+    clear_mods();
+    if (clockwise) {
+        tap_code16(LAG(KC_RIGHT));
+    } else {
+        tap_code16(LAG(KC_LEFT));
+    }
+    set_mods(modifier);
+}
+
+void encoder_action_user_navigate_apps(uint8_t modifier, bool clockwise) {
+    if (clockwise) {
+        tap_code16(KC_TAB);
+    } else {
+        tap_code16(LSFT(KC_TAB));
+    }
+}
+
+void encoder_action_user_navigate(uint8_t modifier, bool clockwise) {
+    if (clockwise) {
+        tap_code(KC_RIGHT);
+    } else {
+        tap_code(KC_LEFT);
+    }
+}
+
+void encoder_action_user_rgb_val(uint8_t modifier, bool clockwise) {
+    if (clockwise) {
+        rgb_matrix_increase_val();
+    } else {
+        rgb_matrix_decrease_val();
     }
 }

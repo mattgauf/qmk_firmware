@@ -23,6 +23,7 @@
 
 /* Board Features */
 #define DYNAMIC_MACRO_SIZE 512
+#define ENCODER_RESOLUTION 4
 
 /* RGB Matrix Features */
 #define RGB_MATRIX_KEYPRESSES

@@ -16,6 +16,7 @@
 
 #include QMK_KEYBOARD_H
 #include "keymap_helpers.h"
+#include "raw_hid.h"
 
 
 enum custom_codes {
@@ -28,13 +29,15 @@ enum custom_codes {
 
 enum layer_names {
     _DEFAULT = 0,
+    _MOUSEKY,
+    _DYNAMIC,
     _EFFECTS,
-    _UTILITY,
     _DFUMODE
 };
 
 
-static bool encoder_navigation = false;
+static bool          encoder_navigation = false;
+static layer_state_t dormant_layerstate;
 
 
 #define MODS_SHIFT ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT)
@@ -44,7 +47,8 @@ static bool encoder_navigation = false;
 
 
 #define LAY_EFF (MO(_EFFECTS))
-#define LAY_UTI (TG(_UTILITY))
+#define LAY_KEY (TG(_MOUSEKY))
+#define LAY_DYN (TG(_DYNAMIC))
 #define LAY_DFU (MO(_DFUMODE))
 
 
@@ -57,19 +61,26 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       KC_LSFT,  KC_Z,    KC_X,    KC_C,   KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,        KC_END,
                       KC_LCTL,  KC_LALT, KC_LGUI,                  KC_SPC,                    KC_RGUI, KC_RALT, LAY_EFF,          KC_LEFT, KC_DOWN, KC_RGHT),
 
-  [_EFFECTS] = LAYOUT(_______, KC_F13,  KC_F14,  KC_F15,  KC_F16,  RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, MG_F18,       MG_TOG,
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_RMOD,
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               RGB_SPI,
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______,          RGB_SAI,      RGB_SPD,
-                      _______, _______, _______,                   _______,                   LAY_UTI, LAY_DFU, _______,          RGB_HUD, RGB_SAD, RGB_HUI),
+  [_MOUSEKY] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      KC_BTN1,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      KC_BTN2,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               KC_BTN3,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      XXXXXXX,
+                      _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 
-  [_UTILITY] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, DM_PLY1, DM_PLY2, DM_REC1, DM_REC2, DM_RSTP,      _______,
+  [_DYNAMIC] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, DM_PLY1, DM_PLY2, DM_REC1, DM_REC2, DM_RSTP,      _______,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               _______,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      _______,
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
+
+  [_EFFECTS] = LAYOUT(_______, KC_F13,  KC_F14,  KC_F15,  KC_F16,  RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, MG_F18,       MG_TOG,
+                      _______, LAY_KEY, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_RMOD,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               RGB_SPI,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______,          RGB_SAI,      RGB_SPD,
+                      _______, _______, _______,                   _______,                   LAY_DYN, LAY_DFU, _______,          RGB_HUD, RGB_SAD, RGB_HUI),
 
   [_DFUMODE] = LAYOUT(RESET,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MG_F19,       DEBUG,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
@@ -83,7 +94,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 // Runs constantly in the background, in a loop.
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    if (IS_LAYER_ON(_UTILITY)) {
+    if (IS_LAYER_ON(_MOUSEKY)) {
+        rgb_matrix_set_color_keys(PIN_DEL,   LEDYELL);
+        rgb_matrix_set_color_keys(PIN_PGUP,  LEDYELL);
+        rgb_matrix_set_color_keys(PIN_PGDN,  LEDYELL);
+        rgb_matrix_set_color_keys(PIN_END,   LEDYELL);
+    }
+
+    if (IS_LAYER_ON(_DYNAMIC)) {
         rgb_matrix_set_color_keys(PIN_F9,    LEDGREE);
         rgb_matrix_set_color_keys(PIN_F10,   LEDGREE);
         rgb_matrix_set_color_keys(PIN_F11,   LED_RED);
@@ -96,15 +114,17 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     }
 
     switch (get_highest_layer(layer_state)) {
+        case _MOUSEKY:
+            break;
+        case _DYNAMIC:
+            break;
+        case _EFFECTS:
+            rgb_matrix_set_color_keys(PIN_PRINT, LEDGREE);
+            break;
         case _DFUMODE:
             rgb_matrix_set_color_both(LED_OFF);
             rgb_matrix_set_color_keys(PIN_ESC,   LED_RED);
             rgb_matrix_set_color_keys(PIN_PRINT, LEDORAN);
-            break;
-        case _UTILITY:
-            break;
-        case _EFFECTS:
-            rgb_matrix_set_color_keys(PIN_PRINT, LEDGREE);
             break;
         default:
             break;
@@ -115,13 +135,14 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 // Called on start
 void dynamic_macro_record_start_user(void) {
     dprint("-- Recording Initiallized\n");
+    dormant_layerstate = layer_state;
 }
 
 
 // Called on start
 void dynamic_macro_record_begin_user(void) {
     dprint("-- Recording Started\n");
-    layer_on(_UTILITY);
+    layer_state_set(dormant_layerstate);
 }
 
 
@@ -135,6 +156,24 @@ void dynamic_macro_record_end_user(int8_t direction) {
 void dynamic_macro_play_user(int8_t direction) {
     dprint("-- Recording Playing\n");
 }
+
+
+// Runs once on keyboard init
+void keyboard_post_init_user(void) {
+    // debug_enable=true;
+    // debug_matrix=true;
+    // debug_keyboard=true;
+    // debug_mouse=true;
+}
+
+
+// HID Interface
+#ifdef RAW_ENABLE
+void raw_hid_receive(uint8_t* data, uint8_t length) {
+    dprint("Received USB data from host system:\n");
+    dprintf("%s\n", data);
+}
+#endif
 
 
 // Runs on encoder event
@@ -166,6 +205,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 
 // Runs on key event
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+
     switch (keycode) {
         case MG_F17:
             if (record->event.pressed) {

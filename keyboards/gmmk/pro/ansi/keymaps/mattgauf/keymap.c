@@ -23,7 +23,7 @@ enum custom_codes {
     MG_F17 = SAFE_RANGE,
     MG_F18,
     MG_F19,
-    MG_TOG
+    MG_NAV
 };
 
 
@@ -75,7 +75,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      _______,
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 
-  [_EFFECTS] = LAYOUT(_______, KC_F13,  KC_F14,  KC_F15,  KC_F16,  RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, MG_F18,       MG_TOG,
+  [_EFFECTS] = LAYOUT(_______, KC_F13,  KC_F14,  KC_F15,  KC_F16,  RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, MG_F18,       MG_NAV,
                       _______, LAY_KEY, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_RMOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               RGB_SPI,
@@ -95,10 +95,10 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Runs constantly in the background, in a loop.
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (IS_LAYER_ON(_MOUSEKY)) {
-        rgb_matrix_set_color_keys(PIN_DEL,   LEDYELL);
-        rgb_matrix_set_color_keys(PIN_PGUP,  LEDYELL);
-        rgb_matrix_set_color_keys(PIN_PGDN,  LEDYELL);
-        rgb_matrix_set_color_keys(PIN_END,   LEDYELL);
+        rgb_matrix_set_color_keys(PIN_DEL,   LEDFOAM);
+        rgb_matrix_set_color_keys(PIN_PGUP,  LEDFOAM);
+        rgb_matrix_set_color_keys(PIN_PGDN,  LEDFOAM);
+        rgb_matrix_set_color_keys(PIN_END,   LEDFOAM);
     }
 
     if (IS_LAYER_ON(_DYNAMIC)) {
@@ -181,21 +181,29 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
     uint8_t modifier = get_mods();
 
     if (IS_LAYER_ON(_EFFECTS)) {
-        encoder_action_user_rgb_val(modifier, clockwise);
+        encoder_action_user_rgb_val(clockwise);
     } else {
         if (MODS_GUI) {
             if (MODS_GUI && MODS_SHIFT) {
-                encoder_action_user_history(modifier, clockwise);
+                clear_mods();
+                encoder_action_user_history(clockwise);
+                set_mods(modifier);
             } else if (MODS_GUI && MODS_ALT) {
-                encoder_action_user_navigate_tabs(modifier, clockwise);
+                if (encoder_navigation) {
+                    clear_mods();
+                    encoder_action_user_navigate(clockwise);
+                    set_mods(modifier);
+                } else {
+                    encoder_action_user_navigate_tabs(clockwise);
+                }
             } else {
-                encoder_action_user_navigate_apps(modifier, clockwise);
+                encoder_action_user_navigate_apps(clockwise);
             }
         } else {
             if (encoder_navigation) {
-                encoder_action_user_navigate(modifier, clockwise);
+                encoder_action_user_navigate_tabs(clockwise);
             } else {
-                encoder_action_user_volume(modifier, clockwise);
+                encoder_action_user_volume(clockwise);
             }
         }
     }
@@ -222,7 +230,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code16(HYPR(KC_F19));
             }
             return false;
-        case MG_TOG:
+        case MG_NAV:
             if (record->event.pressed) {
                 encoder_navigation = !encoder_navigation;
             }

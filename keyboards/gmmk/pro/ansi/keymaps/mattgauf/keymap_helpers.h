@@ -26,14 +26,15 @@
 void rgb_matrix_set_color_keys(uint8_t index, uint8_t red, uint8_t green, uint8_t blue);
 void rgb_matrix_set_color_case(uint8_t red, uint8_t green, uint8_t blue);
 void rgb_matrix_set_color_both(uint8_t red, uint8_t green, uint8_t blue);
+void rgb_matrix_set_color_test(void);
 
 /* Encoder functions */
-void encoder_action_user_volume(uint8_t modifier, bool clockwise);
-void encoder_action_user_history(uint8_t modifier, bool clockwise);
-void encoder_action_user_navigate_tabs(uint8_t modifier, bool clockwise);
-void encoder_action_user_navigate_apps(uint8_t modifier, bool clockwise);
-void encoder_action_user_navigate(uint8_t modifier, bool clockwise);
-void encoder_action_user_rgb_val(uint8_t modifier, bool clockwise);
+void encoder_action_user_volume(bool clockwise);
+void encoder_action_user_history(bool clockwise);
+void encoder_action_user_rgb_val(bool clockwise);
+void encoder_action_user_navigate_tabs(bool clockwise);
+void encoder_action_user_navigate_apps(bool clockwise);
+void encoder_action_user_navigate(bool clockwise);
 
 /* Color Codes */
 #define LED_MAX 0xff, 0xff, 0xff
@@ -48,7 +49,7 @@ void encoder_action_user_rgb_val(uint8_t modifier, bool clockwise);
 #define LEDTEAL 0x00, 0x80, 0xff
 #define LEDAZUR 0x00, 0x44, 0xff
 #define LEDBLUE 0x00, 0x00, 0xff
-#define LEDPURP 0x80, 0x00, 0xff
+#define LEDPURP 0x60, 0x00, 0xff
 #define LEDMAGE 0xff, 0x00, 0xff
 #define LEDPINK 0xff, 0x00, 0x80
 #define LEDBLAC 0x00, 0x00, 0x00

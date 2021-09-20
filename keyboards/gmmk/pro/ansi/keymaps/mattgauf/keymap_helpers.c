@@ -45,37 +45,55 @@ void rgb_matrix_set_color_both(uint8_t red, uint8_t green, uint8_t blue) {
     }
 }
 
-void encoder_action_user_volume(uint8_t modifier, bool clockwise) {
-    clear_mods();
+void rgb_matrix_set_color_test(void) {
+    rgb_matrix_set_color_keys(PIN_GRAVE, LED_RED);
+    rgb_matrix_set_color_keys(PIN_1,     LEDORAN);
+    rgb_matrix_set_color_keys(PIN_2,     LEDGOLD);
+    rgb_matrix_set_color_keys(PIN_3,     LEDYELL);
+    rgb_matrix_set_color_keys(PIN_4,     LEDCHAR);
+    rgb_matrix_set_color_keys(PIN_5,     LEDGREE);
+    rgb_matrix_set_color_keys(PIN_6,     LEDFOAM);
+    rgb_matrix_set_color_keys(PIN_7,     LEDTEAL);
+    rgb_matrix_set_color_keys(PIN_8,     LEDAZUR);
+    rgb_matrix_set_color_keys(PIN_9,     LEDBLUE);
+    rgb_matrix_set_color_keys(PIN_0,     LEDPURP);
+    rgb_matrix_set_color_keys(PIN_MINUS, LEDMAGE);
+    rgb_matrix_set_color_keys(PIN_EQUAL, LEDPINK);
+}
+
+void encoder_action_user_volume(bool clockwise) {
     if (clockwise) {
         tap_code(KC_VOLU);
     } else {
         tap_code(KC_VOLD);
     }
-    set_mods(modifier);
 }
 
-void encoder_action_user_history(uint8_t modifier, bool clockwise) {
-    clear_mods();
+void encoder_action_user_history(bool clockwise) {
     if (clockwise) {
         tap_code16(LSG(KC_Z));
     } else {
         tap_code16(LGUI(KC_Z));
     }
-    set_mods(modifier);
 }
 
-void encoder_action_user_navigate_tabs(uint8_t modifier, bool clockwise) {
-    clear_mods();
+void encoder_action_user_rgb_val(bool clockwise) {
+    if (clockwise) {
+        rgb_matrix_increase_val();
+    } else {
+        rgb_matrix_decrease_val();
+    }
+}
+
+void encoder_action_user_navigate_tabs(bool clockwise) {
     if (clockwise) {
         tap_code16(LAG(KC_RIGHT));
     } else {
         tap_code16(LAG(KC_LEFT));
     }
-    set_mods(modifier);
 }
 
-void encoder_action_user_navigate_apps(uint8_t modifier, bool clockwise) {
+void encoder_action_user_navigate_apps(bool clockwise) {
     if (clockwise) {
         tap_code16(KC_TAB);
     } else {
@@ -83,18 +101,10 @@ void encoder_action_user_navigate_apps(uint8_t modifier, bool clockwise) {
     }
 }
 
-void encoder_action_user_navigate(uint8_t modifier, bool clockwise) {
+void encoder_action_user_navigate(bool clockwise) {
     if (clockwise) {
         tap_code(KC_RIGHT);
     } else {
         tap_code(KC_LEFT);
-    }
-}
-
-void encoder_action_user_rgb_val(uint8_t modifier, bool clockwise) {
-    if (clockwise) {
-        rgb_matrix_increase_val();
-    } else {
-        rgb_matrix_decrease_val();
     }
 }

@@ -19,6 +19,12 @@
 #include "raw_hid.h"
 
 
+enum device_codes {
+    _HID_LAY_TOG = 0,
+    _HID_RGB_SET,
+};
+
+
 enum custom_codes {
     MG_F17 = SAFE_RANGE,
     MG_F18,
@@ -171,7 +177,18 @@ void keyboard_post_init_user(void) {
 #ifdef RAW_ENABLE
 void raw_hid_receive(uint8_t* data, uint8_t length) {
     dprint("Received USB data from host system:\n");
-    dprintf("%s\n", data);
+    dprintf("%u\n", data[0]); // unsigned char *msg = data;
+
+    switch (data[0]) {
+    case _HID_LAY_ON:
+        layer_invert(data[1]);
+        break;
+    case _HID_RGB_SET:
+        rgb_matrix_sethsv(data[1], data[2], data[3]);
+        break;
+    default:
+        break;
+    }
 }
 #endif
 

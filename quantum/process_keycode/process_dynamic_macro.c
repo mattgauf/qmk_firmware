@@ -82,6 +82,7 @@ void dynamic_macro_play(keyrecord_t *macro_buffer, keyrecord_t *macro_end, int8_
 
     while (macro_buffer != macro_end) {
         process_record(macro_buffer);
+        wait_ms(5);
         macro_buffer += direction;
     }
 

@@ -13,15 +13,16 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
+// clang-format off
 #include QMK_KEYBOARD_H
 #include "keymap_helpers.h"
 #include "raw_hid.h"
 
 
 enum device_codes {
-    _HID_LAY_TOG = 0,
-    _HID_RGB_SET,
+    _HID_DFU_SET = 0xFF,
+    _HID_LAY_TOG = 0x00,
+    _HID_RGB_SET = 0x01,
 };
 
 
@@ -36,13 +37,19 @@ enum custom_codes {
 enum layer_names {
     _DEFAULT = 0,
     _MOUSEKY,
-    _EFFECTS,
     _DYNAMIC,
+    _EFFECTS,
     _DFUMODE
 };
 
 
 static bool encoder_navigation = false;
+
+static layer_state_t dormant_layerstate;
+static keyrecord_t lay_eff_dn = {{{4, 0}, true,  1}, {0, 0, 0, 0, 0}};
+static keyrecord_t lay_key_dn = {{{7, 1}, true,  2}, {0, 0, 0, 0, 0}};
+static keyrecord_t lay_key_up = {{{7, 1}, false, 3}, {0, 0, 0, 0, 0}};
+static keyrecord_t lay_eff_up = {{{4, 0}, false, 4}, {0, 0, 0, 0, 0}};
 
 
 #define MODS_SHIFT ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT)
@@ -51,13 +58,12 @@ static bool encoder_navigation = false;
 #define MODS_GUI   ((get_mods() | get_oneshot_mods()) & MOD_MASK_GUI)
 
 
-#define LAY_EFF (MO(_EFFECTS))
 #define LAY_KEY (TG(_MOUSEKY))
 #define LAY_DYN (TG(_DYNAMIC))
+#define LAY_EFF (MO(_EFFECTS))
 #define LAY_DFU (MO(_DFUMODE))
 
 
-// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   [_DEFAULT] = LAYOUT(KC_ESC,   KC_F1,   KC_F2,   KC_F3,  KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  MG_F17,       KC_MUTE,
                       KC_GRV,   KC_1,    KC_2,    KC_3,   KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS, KC_EQL,  KC_BSPC,      KC_HOME,
@@ -73,19 +79,19 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      XXXXXXX,
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 
-  [_EFFECTS] = LAYOUT(_______, KC_F13,  KC_F14,  KC_F15,  KC_F16,  RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, MG_F18,       MG_NAV,
-                      _______, LAY_KEY, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_RMOD,
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               RGB_SPI,
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______,          RGB_SAI,      RGB_SPD,
-                      _______, _______, _______,                   _______,                   LAY_DYN, LAY_DFU, _______,          RGB_HUD, RGB_SAD, RGB_HUI),
-
   [_DYNAMIC] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, DM_PLY1, DM_PLY2, DM_REC1, DM_REC2, DM_RSTP,      _______,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               _______,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      _______,
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
+
+  [_EFFECTS] = LAYOUT(_______, KC_F13,  KC_F14,  KC_F15,  KC_F16,  RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, MG_F18,       MG_NAV,
+                      _______, LAY_KEY, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_RMOD,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               RGB_SPI,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______,          RGB_SAI,      RGB_SPD,
+                      _______, _______, _______,                   _______,                   LAY_DYN, LAY_DFU, _______,          RGB_HUD, RGB_SAD, RGB_HUI),
 
   [_DFUMODE] = LAYOUT(RESET,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MG_F19,       DEBUG,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
@@ -121,10 +127,10 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     switch (get_highest_layer(layer_state)) {
         case _MOUSEKY:
             break;
+        case _DYNAMIC:
+            break;
         case _EFFECTS:
             rgb_matrix_set_color_keys(PIN_PRINT, LEDGREE);
-            break;
-        case _DYNAMIC:
             break;
         case _DFUMODE:
             rgb_matrix_set_color_both(LED_OFF);
@@ -140,6 +146,7 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 // Called on start
 void dynamic_macro_record_start_user(void) {
     dprint("-- Recording Initiallized\n");
+    dormant_layerstate = layer_state;
 }
 
 
@@ -147,6 +154,15 @@ void dynamic_macro_record_start_user(void) {
 void dynamic_macro_record_begin_user(void) {
     dprint("-- Recording Started\n");
     layer_on(_DYNAMIC);
+
+    if (IS_LAYER_ON_STATE(dormant_layerstate, _MOUSEKY)) {
+        dprint("-- Enabling _MOUSEKY\n");
+        process_dynamic_macro(LAY_EFF, &lay_eff_dn);
+        process_dynamic_macro(LAY_KEY, &lay_key_dn);
+        process_dynamic_macro(LAY_KEY, &lay_key_up);
+        process_dynamic_macro(LAY_EFF, &lay_eff_up);
+        layer_on(_MOUSEKY);
+    }
 }
 
 
@@ -172,23 +188,20 @@ void keyboard_post_init_user(void) {
 
 
 // HID Interface
-#ifdef RAW_ENABLE
 void raw_hid_receive(uint8_t* data, uint8_t length) {
-    dprint("Received USB data from host system:\n");
-    dprintf("%u\n", data[0]); // unsigned char *msg = data;
+    dprintf("Received USB data from host system (%d):\n", length);
+    for (uint8_t ii = 0; ii < length; ii++) {
+        dprintf("%d: %x\n", ii, data[ii]);  // unsigned char *msg = data;
+    }
 
     switch (data[0]) {
-    case _HID_LAY_ON:
-        layer_invert(data[1]);
-        break;
-    case _HID_RGB_SET:
-        rgb_matrix_sethsv(data[1], data[2], data[3]);
-        break;
-    default:
-        break;
+        case _HID_DFU_SET:
+            reset_keyboard();
+            break;
+        default:
+            break;
     }
 }
-#endif
 
 
 // Runs on encoder event
@@ -228,6 +241,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
 
 // Runs on key event
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // dprintf("##: %d, %d\n", record->event.key.col, record->event.key.row);
 
     switch (keycode) {
         case MG_F17:

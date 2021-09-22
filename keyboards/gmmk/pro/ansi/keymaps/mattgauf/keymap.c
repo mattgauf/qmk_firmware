@@ -45,12 +45,6 @@ enum layer_names {
 
 static bool encoder_navigation = false;
 
-static layer_state_t dormant_layerstate;
-static keyrecord_t lay_eff_dn = {{{4, 0}, true,  1}, {0, 0, 0, 0, 0}};
-static keyrecord_t lay_key_dn = {{{7, 1}, true,  2}, {0, 0, 0, 0, 0}};
-static keyrecord_t lay_key_up = {{{7, 1}, false, 3}, {0, 0, 0, 0, 0}};
-static keyrecord_t lay_eff_up = {{{4, 0}, false, 4}, {0, 0, 0, 0, 0}};
-
 
 #define MODS_SHIFT ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT)
 #define MODS_CTRL  ((get_mods() | get_oneshot_mods()) & MOD_MASK_CTRL)
@@ -146,7 +140,6 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 // Called on start
 void dynamic_macro_record_start_user(void) {
     dprint("-- Recording Initiallized\n");
-    dormant_layerstate = layer_state;
 }
 
 
@@ -154,15 +147,6 @@ void dynamic_macro_record_start_user(void) {
 void dynamic_macro_record_begin_user(void) {
     dprint("-- Recording Started\n");
     layer_on(_DYNAMIC);
-
-    if (IS_LAYER_ON_STATE(dormant_layerstate, _MOUSEKY)) {
-        dprint("-- Enabling _MOUSEKY\n");
-        process_dynamic_macro(LAY_EFF, &lay_eff_dn);
-        process_dynamic_macro(LAY_KEY, &lay_key_dn);
-        process_dynamic_macro(LAY_KEY, &lay_key_up);
-        process_dynamic_macro(LAY_EFF, &lay_eff_up);
-        layer_on(_MOUSEKY);
-    }
 }
 
 

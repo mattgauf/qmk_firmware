@@ -20,7 +20,6 @@
 
 
 enum device_codes {
-    _HID_DFU_SET = 0xFF,
     _HID_LAY_TOG = 0x00,
     _HID_RGB_SET = 0x01,
 };
@@ -36,6 +35,7 @@ enum custom_codes {
 
 enum layer_names {
     _DEFAULT = 0,
+    _MEDIAKY,
     _MOUSEKY,
     _DYNAMIC,
     _EFFECTS,
@@ -52,10 +52,12 @@ static bool encoder_navigation = false;
 #define MODS_GUI   ((get_mods() | get_oneshot_mods()) & MOD_MASK_GUI)
 
 
-#define LAY_KEY (TG(_MOUSEKY))
-#define LAY_DYN (TG(_DYNAMIC))
-#define LAY_EFF (MO(_EFFECTS))
-#define LAY_DFU (MO(_DFUMODE))
+#define TOG_MED (TG(_MEDIAKY))
+#define TOG_KEY (TG(_MOUSEKY))
+#define TOG_DYN (TG(_DYNAMIC))
+#define MOM_EFF (MO(_EFFECTS))
+#define MOM_DYN (MO(_DYNAMIC))
+#define MOM_DFU (MO(_DFUMODE))
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -64,7 +66,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       KC_TAB,   KC_Q,    KC_W,    KC_E,   KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,      KC_PGUP,
                       KC_CAPS,  KC_A,    KC_S,    KC_D,   KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT, KC_ENT,                KC_PGDN,
                       KC_LSFT,  KC_Z,    KC_X,    KC_C,   KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT,          KC_UP,        KC_END,
-                      KC_LCTL,  KC_LALT, KC_LGUI,                  KC_SPC,                    KC_RGUI, KC_RALT, LAY_EFF,          KC_LEFT, KC_DOWN, KC_RGHT),
+                      KC_LCTL,  KC_LALT, KC_LGUI,                  KC_SPC,                    KC_RGUI, KC_RALT, MOM_EFF,          KC_LEFT, KC_DOWN, KC_RGHT),
+
+  [_MEDIAKY] = LAYOUT(_______, KC_F13,  KC_F14,  KC_F15,  KC_F16,  RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, _______,      _______,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               _______,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      _______,
+                      _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 
   [_MOUSEKY] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      KC_BTN1,
@@ -80,12 +89,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      _______,
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 
-  [_EFFECTS] = LAYOUT(_______, KC_F13,  KC_F14,  KC_F15,  KC_F16,  RGB_VAD, RGB_VAI, KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD, KC_VOLU, MG_F18,       MG_NAV,
-                      _______, LAY_KEY, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
+  [_EFFECTS] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MG_F18,       MG_NAV,
+                      _______, TOG_MED, TOG_KEY, TOG_DYN, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_RMOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               RGB_SPI,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______,          RGB_SAI,      RGB_SPD,
-                      _______, _______, _______,                   _______,                   LAY_DYN, LAY_DFU, _______,          RGB_HUD, RGB_SAD, RGB_HUI),
+                      _______, _______, _______,                   _______,                   MOM_DFU, MOM_DYN, _______,          RGB_HUD, RGB_SAD, RGB_HUI),
 
   [_DFUMODE] = LAYOUT(RESET,   _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MG_F19,       DEBUG,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      _______,
@@ -94,11 +103,25 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      _______,
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 };
-// clang-format on
 
 
 // Runs constantly in the background, in a loop.
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    if (IS_LAYER_ON(_MEDIAKY)) {
+        rgb_matrix_set_color_keys(PIN_F1,  LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F2,  LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F3,  LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F4,  LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F5,  LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F6,  LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F7,  LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F8,  LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F9,  LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F10, LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F11, LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F12, LEDGOLD);
+    }
+
     if (IS_LAYER_ON(_MOUSEKY)) {
         rgb_matrix_set_color_keys(PIN_DEL,   LEDFOAM);
         rgb_matrix_set_color_keys(PIN_PGUP,  LEDFOAM);
@@ -119,6 +142,8 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     }
 
     switch (get_highest_layer(layer_state)) {
+        case _MEDIAKY:
+            break;
         case _MOUSEKY:
             break;
         case _DYNAMIC:
@@ -146,7 +171,6 @@ void dynamic_macro_record_start_user(void) {
 // Called on start
 void dynamic_macro_record_begin_user(void) {
     dprint("-- Recording Started\n");
-    layer_on(_DYNAMIC);
 }
 
 
@@ -174,14 +198,19 @@ void keyboard_post_init_user(void) {
 // HID Interface
 void raw_hid_receive(uint8_t* data, uint8_t length) {
     dprintf("Received USB data from host system (%d):\n", length);
-    for (uint8_t ii = 0; ii < length; ii++) {
-        dprintf("%d: %x\n", ii, data[ii]);  // unsigned char *msg = data;
+
+    if (memcmp(data, "dfumode", length) == 0) {
+        dprintf("%s\n", data);
+        reset_keyboard();
+    } else {
+        for (uint8_t ii = 0; ii < length; ii++) {
+            dprintf("%d: %02x\n", ii, data[ii]);
+        }
     }
 
     switch (data[0]) {
-        case _HID_DFU_SET:
-            reset_keyboard();
-            break;
+        case _HID_LAY_TOG:
+        case _HID_RGB_SET:
         default:
             break;
     }
@@ -201,13 +230,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
                 encoder_action_user_history(clockwise);
                 set_mods(modifier);
             } else if (MODS_GUI && MODS_ALT) {
-                if (encoder_navigation) {
-                    clear_mods();
-                    encoder_action_user_navigate(clockwise);
-                    set_mods(modifier);
-                } else {
-                    encoder_action_user_navigate_tabs(clockwise);
-                }
+                encoder_action_user_navigate_tabs(clockwise);
             } else {
                 encoder_action_user_navigate_apps(clockwise);
             }
@@ -273,3 +296,4 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true; // Process all other keycodes normally
     }
 }
+// clang-format on

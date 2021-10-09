@@ -236,7 +236,7 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
             }
         } else {
             if (encoder_navigation) {
-                encoder_action_user_navigate_tabs(clockwise);
+                encoder_action_user_navigate(clockwise);
             } else {
                 encoder_action_user_volume(clockwise);
             }

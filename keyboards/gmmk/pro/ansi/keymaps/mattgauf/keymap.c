@@ -108,18 +108,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Runs constantly in the background, in a loop.
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (IS_LAYER_ON(_MEDIAKY)) {
-        rgb_matrix_set_color_keys(PIN_F1,  LEDGOLD);
-        rgb_matrix_set_color_keys(PIN_F2,  LEDGOLD);
-        rgb_matrix_set_color_keys(PIN_F3,  LEDGOLD);
-        rgb_matrix_set_color_keys(PIN_F4,  LEDGOLD);
-        rgb_matrix_set_color_keys(PIN_F5,  LEDGOLD);
-        rgb_matrix_set_color_keys(PIN_F6,  LEDGOLD);
-        rgb_matrix_set_color_keys(PIN_F7,  LEDGOLD);
-        rgb_matrix_set_color_keys(PIN_F8,  LEDGOLD);
-        rgb_matrix_set_color_keys(PIN_F9,  LEDGOLD);
-        rgb_matrix_set_color_keys(PIN_F10, LEDGOLD);
-        rgb_matrix_set_color_keys(PIN_F11, LEDGOLD);
-        rgb_matrix_set_color_keys(PIN_F12, LEDGOLD);
+        rgb_matrix_set_color_keys(PIN_F1,  LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F2,  LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F3,  LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F4,  LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F5,  LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F6,  LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F7,  LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F8,  LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F9,  LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F10, LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F11, LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F12, LEDORAN);
     }
 
     if (IS_LAYER_ON(_MOUSEKY)) {

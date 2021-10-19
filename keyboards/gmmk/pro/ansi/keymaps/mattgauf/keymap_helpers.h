@@ -19,8 +19,10 @@
 #include "rgb_matrix_types.h"
 
 /* LED matrix color flag helpers */
+#define RGB_FLAG_ALL  (LED_FLAG_ALL)
 #define RGB_FLAG_KEYS (LED_FLAG_KEYLIGHT | LED_FLAG_MODIFIER)
 #define RGB_FLAG_CASE (LED_FLAG_UNDERGLOW)
+#define RGB_FLAG_NONE (LED_FLAG_NONE)
 
 /* Color Functions */
 void rgb_matrix_set_color_keys(uint8_t index, uint8_t red, uint8_t green, uint8_t blue);

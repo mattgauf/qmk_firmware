@@ -274,20 +274,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         case RGB_TOG:
             if (record->event.pressed) {
                 switch (rgb_matrix_get_flags()) {
-                    case LED_FLAG_ALL:
-                        rgb_matrix_set_flags(LED_FLAG_NONE);
-                        break;
-                    case LED_FLAG_NONE:
+                    case RGB_FLAG_ALL:
                         rgb_matrix_set_flags(RGB_FLAG_KEYS);
                         break;
                     case RGB_FLAG_KEYS:
                         rgb_matrix_set_flags(RGB_FLAG_CASE);
                         break;
                     case RGB_FLAG_CASE:
-                        rgb_matrix_set_flags(LED_FLAG_ALL);
+                        rgb_matrix_set_flags(RGB_FLAG_NONE);
+                        break;
+                    case RGB_FLAG_NONE:
+                        rgb_matrix_set_flags(RGB_FLAG_ALL);
                         break;
                     default:
-                        rgb_matrix_set_flags(LED_FLAG_ALL);
+                        rgb_matrix_set_flags(RGB_FLAG_ALL);
                         break;
                 }
             }

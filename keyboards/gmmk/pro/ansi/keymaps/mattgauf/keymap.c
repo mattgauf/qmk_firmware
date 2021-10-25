@@ -19,6 +19,20 @@
 #include "raw_hid.h"
 
 
+typedef union {
+  uint32_t raw;
+  struct {
+    bool default_layer_state: 1;
+    bool mediaky_layer_state: 1;
+    bool mouseky_layer_state: 1;
+    bool dynamic_layer_state: 1;
+    bool effects_layer_state: 1;
+    bool dfumode_layer_state: 1;
+  };
+} user_config_t;
+user_config_t user_config;
+
+
 enum device_codes {
     _HID_LAY_TOG = 0x00,
     _HID_RGB_SET = 0x01,
@@ -29,7 +43,8 @@ enum custom_codes {
     MG_F17 = SAFE_RANGE,
     MG_F18,
     MG_F19,
-    MG_NAV
+    MG_NAV,
+    MG_MAC1
 };
 
 
@@ -43,9 +58,6 @@ enum layer_names {
 };
 
 
-static bool encoder_navigation = false;
-
-
 #define MODS_SHIFT ((get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT)
 #define MODS_CTRL  ((get_mods() | get_oneshot_mods()) & MOD_MASK_CTRL)
 #define MODS_ALT   ((get_mods() | get_oneshot_mods()) & MOD_MASK_ALT)
@@ -53,11 +65,14 @@ static bool encoder_navigation = false;
 
 
 #define TOG_MED (TG(_MEDIAKY))
-#define TOG_KEY (TG(_MOUSEKY))
+#define TOG_MOU (TG(_MOUSEKY))
 #define TOG_DYN (TG(_DYNAMIC))
 #define MOM_EFF (MO(_EFFECTS))
 #define MOM_DYN (MO(_DYNAMIC))
 #define MOM_DFU (MO(_DFUMODE))
+
+
+static bool encoder_navigation = false;
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -79,7 +94,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      KC_BTN1,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      KC_BTN2,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               KC_BTN3,
-                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      XXXXXXX,
+                      _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      MG_MAC1,
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 
   [_DYNAMIC] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, DM_PLY1, DM_PLY2, DM_REC1, DM_REC2, DM_RSTP,      _______,
@@ -90,7 +105,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 
   [_EFFECTS] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MG_F18,       MG_NAV,
-                      _______, TOG_MED, TOG_KEY, TOG_DYN, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
+                      _______, TOG_MED, TOG_MOU, TOG_DYN, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_RMOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               RGB_SPI,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______,          RGB_SAI,      RGB_SPD,
@@ -108,18 +123,18 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // Runs constantly in the background, in a loop.
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (IS_LAYER_ON(_MEDIAKY)) {
-        rgb_matrix_set_color_keys(PIN_F1,  LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F2,  LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F3,  LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F4,  LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F5,  LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F6,  LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F7,  LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F8,  LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F9,  LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F10, LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F11, LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F12, LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F1,    LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F2,    LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F3,    LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F4,    LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F5,    LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F6,    LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F7,    LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F8,    LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F9,    LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F10,   LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F11,   LEDORAN);
+        rgb_matrix_set_color_keys(PIN_F12,   LEDORAN);
     }
 
     if (IS_LAYER_ON(_MOUSEKY)) {
@@ -186,12 +201,44 @@ void dynamic_macro_play_user(int8_t direction) {
 }
 
 
-// Runs once on keyboard init
+/**
+ * Runs on EEPROM reset
+**/
+void eeconfig_init_user(void) {
+  user_config.raw = 0;
+  user_config.default_layer_state = true;
+  user_config.mediaky_layer_state = false;
+  user_config.mouseky_layer_state = false;
+  user_config.dynamic_layer_state = false;
+  user_config.effects_layer_state = false;
+  user_config.dfumode_layer_state = false;
+  eeconfig_update_user(user_config.raw); // Write default value to EEPROM
+}
+
+
+/**
+ * Runs once on keyboard init
+ * Options for debugging:
+ *
+ * debug_enable=true;
+ * debug_mouse=true;
+ * debug_keyboard=true;
+ * debug_matrix=true;
+**/
 void keyboard_post_init_user(void) {
-    // debug_enable=true;
-    // debug_matrix=true;
-    // debug_keyboard=true;
-    // debug_mouse=true;
+    user_config.raw = eeconfig_read_user();
+
+    if (user_config.mediaky_layer_state) {
+        layer_on(_MEDIAKY);
+    }
+    if (user_config.mouseky_layer_state) {
+        layer_on(_MOUSEKY);
+    }
+    if (user_config.dynamic_layer_state) {
+        layer_on(_DYNAMIC);
+    }
+
+    dprint("-- Keyboard initialized\n");
 }
 
 
@@ -266,11 +313,35 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code16(HYPR(KC_F19));
             }
             return false;
+        case MG_MAC1:
+            if (record->event.pressed) {
+                tap_code16(KC_MPLY);
+                tap_code(KC_K);
+            }
+            return false;
         case MG_NAV:
             if (record->event.pressed) {
                 encoder_navigation = !encoder_navigation;
             }
             return false;
+        case TOG_MED:
+            if (record->event.pressed) {
+                user_config.mediaky_layer_state ^=1;
+                eeconfig_update_user(user_config.raw);
+            }
+            return true; // should remain in sync
+        case TOG_MOU:
+            if (record->event.pressed) {
+                user_config.mouseky_layer_state ^=1;
+                eeconfig_update_user(user_config.raw);
+            }
+            return true; // should remain in sync
+        case TOG_DYN:
+            if (record->event.pressed) {
+                user_config.dynamic_layer_state ^=1;
+                eeconfig_update_user(user_config.raw);
+            }
+            return true; // should remain in sync
         case RGB_TOG:
             if (record->event.pressed) {
                 switch (rgb_matrix_get_flags()) {

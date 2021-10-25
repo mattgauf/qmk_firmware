@@ -74,7 +74,7 @@ void encoder_action_user_navigate(bool clockwise);
 #define PIN_PRINT    69
 
 /* Number Row */
-#define PIN_0        57
+#define PIN_GRAVE    1
 #define PIN_1        7
 #define PIN_2        13
 #define PIN_3        19
@@ -84,6 +84,9 @@ void encoder_action_user_navigate(bool clockwise);
 #define PIN_7        40
 #define PIN_8        45
 #define PIN_9        51
+#define PIN_0        57
+#define PIN_MINUS    62
+#define PIN_EQUAL    78
 
 /* QWERTY */
 #define PIN_A        9
@@ -114,8 +117,6 @@ void encoder_action_user_navigate(bool clockwise);
 #define PIN_Z        10
 
 /* Symbols */
-#define PIN_MINUS    62
-#define PIN_EQUAL    78
 #define PIN_RBRACKET 89
 #define PIN_LBRACKET 63
 #define PIN_BSLASH   93
@@ -124,7 +125,6 @@ void encoder_action_user_navigate(bool clockwise);
 #define PIN_QUOTE    64
 #define PIN_COMMA    48
 #define PIN_DOT      54
-#define PIN_GRAVE    1
 
 /* Indentation */
 #define PIN_TAB      2

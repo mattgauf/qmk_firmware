@@ -25,6 +25,9 @@
 #define DYNAMIC_MACRO_SIZE 512
 #define ENCODER_RESOLUTION 4
 
+/* Board Configuration */
+#define FORCE_NKRO
+
 /* RGB Matrix Features */
 #define RGB_MATRIX_KEYPRESSES
 #define RGB_MATRIX_STARTUP_MODE RGB_MATRIX_SOLID_COLOR

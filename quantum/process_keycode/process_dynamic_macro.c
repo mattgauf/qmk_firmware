@@ -60,8 +60,6 @@ void dynamic_macro_record_start(keyrecord_t **macro_pointer, keyrecord_t *macro_
     clear_keyboard();
     layer_clear();
 
-    dynamic_macro_record_begin_user();
-
     *macro_pointer = macro_buffer;
 }
 

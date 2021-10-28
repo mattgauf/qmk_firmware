@@ -105,7 +105,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 
   [_EFFECTS] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MG_F18,       MG_NAV,
-                      _______, TOG_MED, TOG_MOU, TOG_DYN, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
+                      TOG_DYN, TOG_MED, TOG_MOU, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_RMOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               RGB_SPI,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______,          RGB_SAI,      RGB_SPD,
@@ -118,6 +118,75 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      _______,
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 };
+
+
+/**
+ * Runs on EEPROM reset
+**/
+void eeconfig_init_user(void) {
+    user_config.raw = 0;
+    user_config.default_layer_state = true;
+    user_config.mediaky_layer_state = false;
+    user_config.mouseky_layer_state = false;
+    user_config.dynamic_layer_state = false;
+    user_config.effects_layer_state = false;
+    user_config.dfumode_layer_state = false;
+
+    eeconfig_update_user(user_config.raw); // Write default value to EEPROM
+}
+
+
+/**
+ * Runs once on keyboard init
+ * Options for debugging:
+ *
+ * debug_enable=true;
+ * debug_mouse=true;
+ * debug_keyboard=true;
+ * debug_matrix=true;
+**/
+void keyboard_post_init_user(void) {
+    user_config.raw = eeconfig_read_user();
+
+    if (user_config.mediaky_layer_state) {
+        layer_on(_MEDIAKY);
+    }
+    if (user_config.mouseky_layer_state) {
+        layer_on(_MOUSEKY);
+    }
+
+    dprint("-- Keyboard initialized\n");
+}
+
+
+// HID Interface
+void raw_hid_receive(uint8_t* data, uint8_t length) {
+    dprintf("Received USB data from host system (%d):\n", length);
+
+    if (memcmp(data, "dfumode", length) == 0) {
+        dprintf("%s\n", data);
+        reset_keyboard();
+    } else {
+        for (uint8_t ii = 0; ii < length; ii++) {
+            dprintf("%d: %02x\n", ii, data[ii]);
+        }
+    }
+
+    switch (data[0]) {
+        case _HID_LAY_TOG:
+        case _HID_RGB_SET:
+        default:
+            break;
+    }
+}
+
+
+// Called on start
+void dynamic_macro_record_start_user(void) {
+    dprint("-- Recording Initiallized\n");
+
+    eeconfig_init_user();
+}
 
 
 // Runs constantly in the background, in a loop.
@@ -177,93 +246,6 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 }
 
 
-// Called on start
-void dynamic_macro_record_start_user(void) {
-    dprint("-- Recording Initiallized\n");
-}
-
-
-// Called on start
-void dynamic_macro_record_begin_user(void) {
-    dprint("-- Recording Started\n");
-}
-
-
-// Called on end
-void dynamic_macro_record_end_user(int8_t direction) {
-    dprint("-- Recording Ended\n");
-}
-
-
-// Called on playback
-void dynamic_macro_play_user(int8_t direction) {
-    dprint("-- Recording Playing\n");
-}
-
-
-/**
- * Runs on EEPROM reset
-**/
-void eeconfig_init_user(void) {
-  user_config.raw = 0;
-  user_config.default_layer_state = true;
-  user_config.mediaky_layer_state = false;
-  user_config.mouseky_layer_state = false;
-  user_config.dynamic_layer_state = false;
-  user_config.effects_layer_state = false;
-  user_config.dfumode_layer_state = false;
-  eeconfig_update_user(user_config.raw); // Write default value to EEPROM
-}
-
-
-/**
- * Runs once on keyboard init
- * Options for debugging:
- *
- * debug_enable=true;
- * debug_mouse=true;
- * debug_keyboard=true;
- * debug_matrix=true;
-**/
-void keyboard_post_init_user(void) {
-    user_config.raw = eeconfig_read_user();
-
-    if (user_config.mediaky_layer_state) {
-        layer_on(_MEDIAKY);
-    }
-    if (user_config.mouseky_layer_state) {
-        layer_on(_MOUSEKY);
-    }
-    if (user_config.dynamic_layer_state) {
-        layer_on(_DYNAMIC);
-    }
-
-    dprint("-- Keyboard initialized\n");
-}
-
-
-// HID Interface
-void raw_hid_receive(uint8_t* data, uint8_t length) {
-    dprintf("Received USB data from host system (%d):\n", length);
-
-    if (memcmp(data, "dfumode", length) == 0) {
-        dprintf("%s\n", data);
-        reset_keyboard();
-    } else {
-        for (uint8_t ii = 0; ii < length; ii++) {
-            dprintf("%d: %02x\n", ii, data[ii]);
-        }
-    }
-
-    switch (data[0]) {
-        case _HID_LAY_TOG:
-        case _HID_RGB_SET:
-        default:
-            break;
-    }
-}
-
-
 // Runs on encoder event
 bool encoder_update_user(uint8_t index, bool clockwise) {
     uint8_t modifier = get_mods();
@@ -313,15 +295,15 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code16(HYPR(KC_F19));
             }
             return false;
+        case MG_NAV:
+            if (record->event.pressed) {
+                encoder_navigation = !encoder_navigation;
+            }
+            return false;
         case MG_MAC1:
             if (record->event.pressed) {
                 tap_code16(KC_MPLY);
                 tap_code(KC_K);
-            }
-            return false;
-        case MG_NAV:
-            if (record->event.pressed) {
-                encoder_navigation = !encoder_navigation;
             }
             return false;
         case TOG_MED:
@@ -329,19 +311,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 user_config.mediaky_layer_state ^=1;
                 eeconfig_update_user(user_config.raw);
             }
-            return true; // should remain in sync
+            return true;
         case TOG_MOU:
             if (record->event.pressed) {
                 user_config.mouseky_layer_state ^=1;
                 eeconfig_update_user(user_config.raw);
             }
-            return true; // should remain in sync
-        case TOG_DYN:
-            if (record->event.pressed) {
-                user_config.dynamic_layer_state ^=1;
-                eeconfig_update_user(user_config.raw);
-            }
-            return true; // should remain in sync
+            return true;
         case RGB_TOG:
             if (record->event.pressed) {
                 switch (rgb_matrix_get_flags()) {

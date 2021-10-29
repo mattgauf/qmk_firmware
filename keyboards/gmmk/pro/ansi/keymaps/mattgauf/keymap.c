@@ -17,17 +17,21 @@
 #include QMK_KEYBOARD_H
 #include "keymap_helpers.h"
 #include "raw_hid.h"
+#include "digitizer.h"
+
+
+digitizer_t digitizer;
 
 
 typedef union {
   uint32_t raw;
   struct {
-    bool default_layer_state: 1;
-    bool mediaky_layer_state: 1;
-    bool mouseky_layer_state: 1;
-    bool dynamic_layer_state: 1;
-    bool effects_layer_state: 1;
-    bool dfumode_layer_state: 1;
+    bool DEFAULT_STATE: 1;
+    bool MEDIAKY_STATE: 1;
+    bool MOUSEKY_STATE: 1;
+    bool DYNAMIC_STATE: 1;
+    bool EFFECTS_STATE: 1;
+    bool DFUMODE_STATE: 1;
   };
 } user_config_t;
 user_config_t user_config;
@@ -44,7 +48,8 @@ enum custom_codes {
     MG_F18,
     MG_F19,
     MG_NAV,
-    MG_MAC1
+    MG_MAC1,
+    MG_MAC2
 };
 
 
@@ -125,12 +130,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 **/
 void eeconfig_init_user(void) {
     user_config.raw = 0;
-    user_config.default_layer_state = true;
-    user_config.mediaky_layer_state = false;
-    user_config.mouseky_layer_state = false;
-    user_config.dynamic_layer_state = false;
-    user_config.effects_layer_state = false;
-    user_config.dfumode_layer_state = false;
+    user_config.DEFAULT_STATE = true;
+    user_config.MEDIAKY_STATE = false;
+    user_config.MOUSEKY_STATE = false;
+    user_config.DYNAMIC_STATE = false;
+    user_config.EFFECTS_STATE = false;
+    user_config.DFUMODE_STATE = false;
 
     eeconfig_update_user(user_config.raw); // Write default value to EEPROM
 }
@@ -148,10 +153,10 @@ void eeconfig_init_user(void) {
 void keyboard_post_init_user(void) {
     user_config.raw = eeconfig_read_user();
 
-    if (user_config.mediaky_layer_state) {
+    if (user_config.MEDIAKY_STATE) {
         layer_on(_MEDIAKY);
     }
-    if (user_config.mouseky_layer_state) {
+    if (user_config.MOUSEKY_STATE) {
         layer_on(_MOUSEKY);
     }
 
@@ -308,13 +313,13 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case TOG_MED:
             if (record->event.pressed) {
-                user_config.mediaky_layer_state ^=1;
+                user_config.MEDIAKY_STATE ^=1;
                 eeconfig_update_user(user_config.raw);
             }
             return true;
         case TOG_MOU:
             if (record->event.pressed) {
-                user_config.mouseky_layer_state ^=1;
+                user_config.MOUSEKY_STATE ^=1;
                 eeconfig_update_user(user_config.raw);
             }
             return true;

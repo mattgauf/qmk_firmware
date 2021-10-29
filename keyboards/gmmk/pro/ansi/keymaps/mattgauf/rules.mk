@@ -16,6 +16,7 @@ UNICODE_ENABLE = no             # Unicode
 BLUETOOTH_ENABLE = no           # Enable Bluetooth
 AUDIO_ENABLE = no               # Audio output
 ENCODER_ENABLE = yes            # Rotary encoder support
+DIGITIZER_ENABLE = yes					# Digitizer support
 DYNAMIC_MACRO_ENABLE = yes      # Dynamic macro support
 DEBOUNCE_TYPE = sym_defer_pk    # Per key debouncing
 RGB_MATRIX_ENABLE = yes

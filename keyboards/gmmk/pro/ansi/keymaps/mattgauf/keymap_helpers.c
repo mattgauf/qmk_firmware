@@ -17,6 +17,7 @@
 #include QMK_KEYBOARD_H
 #include "keymap_helpers.h"
 #include "rgb_matrix.h"
+#include "digitizer.h"
 
 
 // static uint8_t  rgb_pin_fn_column[]      = {PIN_DEL,PIN_PGUP,PIN_PGDN,PIN_END};
@@ -107,4 +108,9 @@ void encoder_action_user_navigate(bool clockwise) {
     } else {
         tap_code(KC_LEFT);
     }
+}
+
+void digitizer_send_update(digitizer_t digitizerUpdate) {
+    digitizer_set_report(digitizerUpdate);
+    digitizer_task();
 }

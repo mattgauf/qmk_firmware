@@ -17,6 +17,7 @@
 // clang-format off
 #include <inttypes.h>
 #include "rgb_matrix_types.h"
+#include "digitizer.h"
 
 /* LED matrix color flag helpers */
 #define RGB_FLAG_ALL  (LED_FLAG_ALL)
@@ -30,13 +31,16 @@ void rgb_matrix_set_color_case(uint8_t red, uint8_t green, uint8_t blue);
 void rgb_matrix_set_color_both(uint8_t red, uint8_t green, uint8_t blue);
 void rgb_matrix_set_color_test(void);
 
-/* Encoder functions */
+/* Encoder Functions */
 void encoder_action_user_volume(bool clockwise);
 void encoder_action_user_history(bool clockwise);
 void encoder_action_user_rgb_val(bool clockwise);
 void encoder_action_user_navigate_tabs(bool clockwise);
 void encoder_action_user_navigate_apps(bool clockwise);
 void encoder_action_user_navigate(bool clockwise);
+
+/* Digitizer Functions */
+void digitizer_send_update(digitizer_t digitizerUpdate);
 
 /* Color Codes */
 #define LED_MAX 0xff, 0xff, 0xff

@@ -40,7 +40,7 @@ void encoder_action_user_navigate_apps(bool clockwise);
 void encoder_action_user_navigate(bool clockwise);
 
 /* Digitizer Functions */
-void digitizer_send_update(digitizer_t digitizerUpdate);
+void digitizer_send_update(void);
 
 /* Color Codes */
 #define LED_MAX 0xff, 0xff, 0xff

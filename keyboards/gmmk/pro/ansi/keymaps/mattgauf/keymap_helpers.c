@@ -109,8 +109,3 @@ void encoder_action_user_navigate(bool clockwise) {
         tap_code(KC_LEFT);
     }
 }
-
-void digitizer_send_update(digitizer_t digitizerUpdate) {
-    digitizer_set_report(digitizerUpdate);
-    digitizer_task();
-}

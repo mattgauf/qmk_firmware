@@ -20,9 +20,6 @@
 #include "digitizer.h"
 
 
-digitizer_t digitizer;
-
-
 typedef union {
   uint32_t raw;
   struct {
@@ -78,6 +75,14 @@ enum layer_names {
 
 
 static bool encoder_navigation = false;
+digitizer_t digitizer = {
+    .tipswitch = 0,
+    .inrange = 0,
+    .id = 0,
+    .x = 0,
+    .y = 0,
+    .status = DZ_INITIALIZED
+};
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -161,28 +166,6 @@ void keyboard_post_init_user(void) {
     }
 
     dprint("-- Keyboard initialized\n");
-}
-
-
-// HID Interface
-void raw_hid_receive(uint8_t* data, uint8_t length) {
-    dprintf("Received USB data from host system (%d):\n", length);
-
-    if (memcmp(data, "dfumode", length) == 0) {
-        dprintf("%s\n", data);
-        reset_keyboard();
-    } else {
-        for (uint8_t ii = 0; ii < length; ii++) {
-            dprintf("%d: %02x\n", ii, data[ii]);
-        }
-    }
-
-    switch (data[0]) {
-        case _HID_LAY_TOG:
-        case _HID_RGB_SET:
-        default:
-            break;
-    }
 }
 
 
@@ -311,6 +294,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 tap_code(KC_K);
             }
             return false;
+        case MG_MAC2:
+            if (!record->event.pressed) {
+                digitizer.y = 0.5;
+                digitizer.x = 0.25;
+                digitizer.tipswitch = 1;
+                digitizer_send_update();
+
+                wait_ms(250);
+
+                digitizer.x = 0.75;
+                digitizer.tipswitch = 1;
+                digitizer_send_update();
+            }
+            return false;
         case TOG_MED:
             if (record->event.pressed) {
                 user_config.MEDIAKY_STATE ^=1;
@@ -346,6 +343,50 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         default:
             return true; // Process all other keycodes normally
+    }
+}
+
+
+// HID Interface
+void raw_hid_receive(uint8_t* data, uint8_t length) {
+    dprintf("Received USB data from host system (%d):\n", length);
+
+    if (memcmp(data, "dfumode", length) == 0) {
+        dprintf("%s\n", data);
+        reset_keyboard();
+    } else {
+        for (uint8_t ii = 0; ii < length; ii++) {
+            dprintf("%d: %02x\n", ii, data[ii]);
+        }
+    }
+
+    switch (data[0]) {
+        case _HID_LAY_TOG:
+        case _HID_RGB_SET:
+        default:
+            break;
+    }
+}
+
+
+// Commit an update to the digitizer task
+void digitizer_send_update(void) {
+    digitizer.inrange = 1;
+    digitizer.status |= DZ_UPDATED;
+    digitizer_task();
+}
+
+
+// Checks if the digitizer needs updating and sends to host
+void digitizer_send(void) {
+    if (digitizer.status & DZ_UPDATED) {
+        dprintf("DG: x: %.4f, y: %.4f, inrange: %d, status: %d\n", digitizer.x, digitizer.y, digitizer.inrange, digitizer.status);
+
+        host_digitizer_send(&digitizer);
+
+        digitizer.inrange   = 0;
+        digitizer.tipswitch = 0;
+        digitizer.status &= ~DZ_UPDATED;
     }
 }
 // clang-format on

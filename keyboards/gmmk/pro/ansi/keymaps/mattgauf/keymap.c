@@ -115,7 +115,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 
   [_EFFECTS] = LAYOUT(_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MG_F18,       MG_NAV,
-                      TOG_DYN, TOG_MED, TOG_MOU, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_MOD,
+                      TOG_DYN, TOG_MED, TOG_MOU, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, KC_DEL,       RGB_MOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,      RGB_RMOD,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,               RGB_SPI,
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______,          RGB_SAI,      RGB_SPD,
@@ -128,6 +128,67 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                       _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,      _______,
                       _______, _______, _______,                   _______,                   _______, _______, _______,          _______, _______, _______),
 };
+
+
+#ifdef _______
+#undef _______
+#define _______ LEDTRNS
+
+const uint8_t led_pinmap[] = {
+  PIN_ESC,    PIN_F1,   PIN_F2,   PIN_F3,    PIN_F4,   PIN_F5, PIN_F6,    PIN_F7,   PIN_F8,    PIN_F9,    PIN_F10,    PIN_F11,      PIN_F12,      PIN_PRINT,
+  PIN_GRAVE,  PIN_1,    PIN_2,    PIN_3,     PIN_4,    PIN_5,  PIN_6,     PIN_7,    PIN_8,     PIN_9,     PIN_0,      PIN_MINUS,    PIN_EQUAL,    PIN_BSPACE, PIN_DEL,
+  PIN_TAB,    PIN_Q,    PIN_W,    PIN_E,     PIN_R,    PIN_T,  PIN_Y,     PIN_U,    PIN_I,     PIN_O,     PIN_P,      PIN_LBRACKET, PIN_RBRACKET, PIN_BSLASH, PIN_PGUP,
+  PIN_CAPS,   PIN_A,    PIN_S,    PIN_D,     PIN_F,    PIN_G,  PIN_H,     PIN_J,    PIN_K,     PIN_L,     PIN_SCOLON, PIN_QUOTE,    PIN_ENTER,                PIN_PGDN,
+  PIN_LSHIFT, PIN_Z,    PIN_X,    PIN_C,     PIN_V,    PIN_B,  PIN_N,     PIN_M,    PIN_COMMA, PIN_DOT,   PIN_SLASH,  PIN_RSHIFT,           PIN_UP,           PIN_END,
+  PIN_LCTRL,  PIN_LGUI, PIN_LALT,                      PIN_SPACE,                   PIN_RALT,  PIN_FN,    PIN_RCTRL,              PIN_LEFT, PIN_DOWN,  PIN_RIGHT,
+};
+
+
+const uint16_t PROGMEM ledmap[][82][3] = {
+    [_MEDIAKY] = {
+        {_______}, {LEDORAN}, {LEDORAN}, {LEDORAN}, {LEDORAN}, {LEDORAN}, {LEDORAN}, {LEDORAN}, {LEDORAN}, {LEDORAN}, {LEDORAN}, {LEDORAN}, {LEDORAN}, {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},      {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},      {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},                 {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},            {_______},      {_______},
+        {_______}, {_______}, {_______},                       {_______},                       {_______}, {_______}, {_______},            {_______}, {_______}, {_______}
+    },
+    [_MOUSEKY] = {
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},      {LEDFOAM},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},      {LEDFOAM},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},                 {LEDFOAM},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},            {_______},      {LEDFOAM},
+        {_______}, {_______}, {_______},                       {_______},                       {_______}, {_______}, {_______},            {_______}, {_______}, {_______}
+    },
+    [_DYNAMIC] = {
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {LEDGREE}, {LEDGREE}, {LED_RED}, {LED_RED}, {LED_MAX},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},      {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},      {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},                 {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},            {_______},      {_______},
+        {_______}, {_______}, {_______},                       {_______},                       {_______}, {_______}, {_______},            {_______}, {_______}, {_______}
+    },
+    [_EFFECTS] = {
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {LEDGREE},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},      {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},      {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},                 {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},            {_______},      {_______},
+        {_______}, {_______}, {_______},                       {_______},                       {_______}, {_______}, {_______},            {_______}, {_______}, {_______}
+    },
+    [_DFUMODE] = {
+        {LED_RED}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {LEDORAN},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},      {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},      {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},                 {_______},
+        {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______}, {_______},            {_______},      {_______},
+        {_______}, {_______}, {_______},                       {_______},                       {_______}, {_______}, {_______},            {_______}, {_______}, {_______}
+    },
+};
+#undef _______
+#define _______ KC_TRNS
+#endif
 
 
 /**
@@ -177,41 +238,25 @@ void dynamic_macro_record_start_user(void) {
 }
 
 
+void set_layer_color(int layer) {
+    if (IS_LAYER_OFF(layer)) { return; }
+
+    for (int ii = 0; ii < 82; ii++) {
+        if (ledmap[layer][ii][0] == 0xffff || ledmap[layer][ii][1] == 0xffff || ledmap[layer][ii][2] == 0xffff) {
+            continue;
+        }
+
+        rgb_matrix_set_color_keys(led_pinmap[ii], ledmap[layer][ii][0], ledmap[layer][ii][1], ledmap[layer][ii][2]);
+    }
+}
+
+
 // Runs constantly in the background, in a loop.
 void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    if (IS_LAYER_ON(_MEDIAKY)) {
-        rgb_matrix_set_color_keys(PIN_F1,    LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F2,    LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F3,    LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F4,    LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F5,    LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F6,    LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F7,    LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F8,    LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F9,    LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F10,   LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F11,   LEDORAN);
-        rgb_matrix_set_color_keys(PIN_F12,   LEDORAN);
-    }
-
-    if (IS_LAYER_ON(_MOUSEKY)) {
-        rgb_matrix_set_color_keys(PIN_DEL,   LEDFOAM);
-        rgb_matrix_set_color_keys(PIN_PGUP,  LEDFOAM);
-        rgb_matrix_set_color_keys(PIN_PGDN,  LEDFOAM);
-        rgb_matrix_set_color_keys(PIN_END,   LEDFOAM);
-    }
-
-    if (IS_LAYER_ON(_DYNAMIC)) {
-        rgb_matrix_set_color_keys(PIN_F9,    LEDGREE);
-        rgb_matrix_set_color_keys(PIN_F10,   LEDGREE);
-        rgb_matrix_set_color_keys(PIN_F11,   LED_RED);
-        rgb_matrix_set_color_keys(PIN_F12,   LED_RED);
-        rgb_matrix_set_color_keys(PIN_PRINT, LED_MAX);
-    }
-
-    if (host_keyboard_led_state().caps_lock) {
-        rgb_matrix_set_color_keys(PIN_CAPS, LED_MAX);
-    }
+    set_layer_color(_MEDIAKY);
+    set_layer_color(_MOUSEKY);
+    set_layer_color(_DYNAMIC);
+    set_layer_color(_EFFECTS);
 
     switch (get_highest_layer(layer_state)) {
         case _MEDIAKY:
@@ -221,15 +266,17 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
         case _DYNAMIC:
             break;
         case _EFFECTS:
-            rgb_matrix_set_color_keys(PIN_PRINT, LEDGREE);
             break;
         case _DFUMODE:
             rgb_matrix_set_color_both(LED_OFF);
-            rgb_matrix_set_color_keys(PIN_ESC,   LED_RED);
-            rgb_matrix_set_color_keys(PIN_PRINT, LEDORAN);
+            set_layer_color(_DFUMODE);
             break;
         default:
             break;
+    }
+
+    if (host_keyboard_led_state().caps_lock) {
+        rgb_matrix_set_color_keys(PIN_CAPS, LED_MAX);
     }
 }
 
@@ -296,16 +343,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case MG_MAC2:
             if (!record->event.pressed) {
-                digitizer.y = 0.5;
-                digitizer.x = 0.25;
-                digitizer.tipswitch = 1;
-                digitizer_send_update();
-
+                digitizer_send_update(0.25, 0.5, 1);
                 wait_ms(250);
-
-                digitizer.x = 0.75;
-                digitizer.tipswitch = 1;
-                digitizer_send_update();
+                digitizer_send_update(0.75, 0.5, 1);
             }
             return false;
         case TOG_MED:
@@ -369,24 +409,33 @@ void raw_hid_receive(uint8_t* data, uint8_t length) {
 }
 
 
-// Commit an update to the digitizer task
-void digitizer_send_update(void) {
-    digitizer.inrange = 1;
-    digitizer.status |= DZ_UPDATED;
-    digitizer_task();
-}
-
-
 // Checks if the digitizer needs updating and sends to host
 void digitizer_send(void) {
     if (digitizer.status & DZ_UPDATED) {
-        dprintf("DG: x: %.4f, y: %.4f, inrange: %d, status: %d\n", digitizer.x, digitizer.y, digitizer.inrange, digitizer.status);
+        dprintf("DG: x: %x, y: %x, inrange: %x, status: %x\n", digitizer.x, digitizer.y, digitizer.inrange, digitizer.status);
 
         host_digitizer_send(&digitizer);
-
-        digitizer.inrange   = 0;
-        digitizer.tipswitch = 0;
         digitizer.status &= ~DZ_UPDATED;
     }
+}
+
+
+//
+void digitizer_send_finish(void) {
+    digitizer_send();
+
+    digitizer.tipswitch = 0;
+    digitizer.inrange   = 0;
+}
+
+
+// Commit an update to the digitizer task
+void digitizer_send_update(float x, float y, int8_t tipswitch) {
+    digitizer.x         = x;
+    digitizer.y         = y;
+    digitizer.inrange   = 1;
+    digitizer.tipswitch = tipswitch;
+    digitizer.status   |= DZ_UPDATED;
+    digitizer_send_finish();
 }
 // clang-format on

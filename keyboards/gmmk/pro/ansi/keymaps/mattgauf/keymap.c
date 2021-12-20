@@ -343,9 +343,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case MG_MAC2:
             if (!record->event.pressed) {
-                digitizer_send_update(0.25, 0.5, 1);
-                wait_ms(250);
-                digitizer_send_update(0.75, 0.5, 1);
+                // digitizer_send_update(0.25, 0.5, 1);
+                // wait_ms(250);
+                // digitizer_send_update(0.75, 0.5, 1);
             }
             return false;
         case TOG_MED:

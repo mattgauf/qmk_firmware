@@ -28,9 +28,10 @@
 #define RGB_FLAG_NONE (LED_FLAG_NONE)
 
 /* Color Functions */
-void rgb_matrix_set_color_keys(uint8_t index, uint8_t red, uint8_t green, uint8_t blue);
-void rgb_matrix_set_color_case(uint8_t red, uint8_t green, uint8_t blue);
-void rgb_matrix_set_color_both(uint8_t red, uint8_t green, uint8_t blue);
+RGB rgb_matrix_get_scale_rgb(uint8_t hue, uint8_t sat, uint8_t val);
+void rgb_matrix_set_color_keys(uint8_t index, uint8_t hue, uint8_t sat, uint8_t val);
+void rgb_matrix_set_color_case(uint8_t hue, uint8_t sat, uint8_t val);
+void rgb_matrix_set_color_both(uint8_t hue, uint8_t sat, uint8_t val);
 void rgb_matrix_set_color_test(void);
 
 /* Encoder Functions */
@@ -45,21 +46,21 @@ void encoder_action_user_navigate(bool clockwise);
 void digitizer_send_update(float x, float y, int8_t tipswitch);
 
 /* Color Codes */
-#define LED_MAX 0x00ff, 0x00ff, 0x00ff
-#define LEDWHIT 0x00ff, 0x00ff, 0x00ff
-#define LED_RED 0x00ff, 0x0000, 0x0000
-#define LEDORAN 0x00ff, 0x0029, 0x0000
-#define LEDGOLD 0x00ff, 0x0080, 0x0000
-#define LEDYELL 0x00ff, 0x00ff, 0x0000
-#define LEDCHAR 0x0080, 0x00ff, 0x0000
-#define LEDGREE 0x0000, 0x00ff, 0x0000
-#define LEDFOAM 0x0000, 0x00ff, 0x0040
-#define LEDTEAL 0x0000, 0x0080, 0x00ff
-#define LEDAZUR 0x0000, 0x0044, 0x00ff
-#define LEDBLUE 0x0000, 0x0000, 0x00ff
-#define LEDPURP 0x0060, 0x0000, 0x00ff
-#define LEDMAGE 0x00ff, 0x0000, 0x00ff
-#define LEDPINK 0x00ff, 0x0000, 0x0080
+#define LED_MAX 0x0000, 0x0000, 0x00ff
+#define LEDWHIT 0x0000, 0x0000, 0x00ff
+#define LED_RED 0x0000, 0x00ff, 0x00ff
+#define LEDORAN 0x0007, 0x00ff, 0x00ff
+#define LEDGOLD 0x0015, 0x00ff, 0x00ff
+#define LEDYELL 0x002b, 0x00ff, 0x00ff
+#define LEDCHAR 0x0040, 0x00ff, 0x00ff
+#define LEDGREE 0x0055, 0x00ff, 0x00ff
+#define LEDFOAM 0x0060, 0x00ff, 0x00ff
+#define LEDTEAL 0x0095, 0x00ff, 0x00ff
+#define LEDAZUR 0x009f, 0x00ff, 0x00ff
+#define LEDBLUE 0x00aa, 0x00ff, 0x00ff
+#define LEDPURP 0x00ba, 0x00ff, 0x00ff
+#define LEDMAGE 0x00d5, 0x00ff, 0x00ff
+#define LEDPINK 0x00ea, 0x00ff, 0x00ff
 #define LEDBLAC 0x0000, 0x0000, 0x0000
 #define LED_OFF 0x0000, 0x0000, 0x0000
 #define LEDTRNS 0xffff, 0xffff, 0xffff

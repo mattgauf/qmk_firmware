@@ -27,8 +27,10 @@
 #define RGB_FLAG_CASE (LED_FLAG_UNDERGLOW)
 #define RGB_FLAG_NONE (LED_FLAG_NONE)
 
-/* Color Functions */
+/* Color Conversion Functions */
 RGB rgb_matrix_get_scale_rgb(uint8_t hue, uint8_t sat, uint8_t val);
+
+/* Color Functions */
 void rgb_matrix_set_color_keys(uint8_t index, uint8_t hue, uint8_t sat, uint8_t val);
 void rgb_matrix_set_color_case(uint8_t hue, uint8_t sat, uint8_t val);
 void rgb_matrix_set_color_both(uint8_t hue, uint8_t sat, uint8_t val);
@@ -48,19 +50,19 @@ void digitizer_send_update(float x, float y, int8_t tipswitch);
 /* Color Codes */
 #define LED_MAX 0x0000, 0x0000, 0x00ff
 #define LEDWHIT 0x0000, 0x0000, 0x00ff
-#define LED_RED 0x0000, 0x00ff, 0x00ff
-#define LEDORAN 0x0007, 0x00ff, 0x00ff
-#define LEDGOLD 0x0015, 0x00ff, 0x00ff
-#define LEDYELL 0x002b, 0x00ff, 0x00ff
-#define LEDCHAR 0x0040, 0x00ff, 0x00ff
-#define LEDGREE 0x0055, 0x00ff, 0x00ff
-#define LEDFOAM 0x0060, 0x00ff, 0x00ff
-#define LEDTEAL 0x0095, 0x00ff, 0x00ff
-#define LEDAZUR 0x009f, 0x00ff, 0x00ff
-#define LEDBLUE 0x00aa, 0x00ff, 0x00ff
-#define LEDPURP 0x00ba, 0x00ff, 0x00ff
-#define LEDMAGE 0x00d5, 0x00ff, 0x00ff
-#define LEDPINK 0x00ea, 0x00ff, 0x00ff
+#define LED_RED 0x0000, 0x00ff, 0x00ff // 1
+#define LEDORAN 0x0007, 0x00ff, 0x00ff // 2
+#define LEDGOLD 0x0015, 0x00ff, 0x00ff // 3
+#define LEDYELL 0x002b, 0x00ff, 0x00ff // 4
+#define LEDCHAR 0x0040, 0x00ff, 0x00ff // 5
+#define LEDGREE 0x0055, 0x00ff, 0x00ff // 6
+#define LEDFOAM 0x0060, 0x00ff, 0x00ff // 7
+#define LEDTEAL 0x0087, 0x00ff, 0x00ff // 8
+#define LEDAZUR 0x009f, 0x00ff, 0x00ff // 9
+#define LEDBLUE 0x00aa, 0x00ff, 0x00ff // 10
+#define LEDPURP 0x00ba, 0x00ff, 0x00ff // 11
+#define LEDMAGE 0x00d5, 0x00ff, 0x00ff // 12
+#define LEDPINK 0x00ea, 0x00ff, 0x00ff // 13
 #define LEDBLAC 0x0000, 0x0000, 0x0000
 #define LED_OFF 0x0000, 0x0000, 0x0000
 #define LEDTRNS 0xffff, 0xffff, 0xffff

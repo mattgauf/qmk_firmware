@@ -278,6 +278,8 @@ void rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     if (host_keyboard_led_state().caps_lock) {
         rgb_matrix_set_color_keys(PIN_CAPS, LED_MAX);
     }
+
+    // rgb_matrix_set_color_test();
 }
 
 

@@ -62,19 +62,19 @@ void rgb_matrix_set_color_both(uint8_t hue, uint8_t sat, uint8_t val) {
 }
 
 void rgb_matrix_set_color_test(void) {
-    rgb_matrix_set_color_keys(PIN_GRAVE, LED_RED);
-    rgb_matrix_set_color_keys(PIN_1,     LEDORAN);
-    rgb_matrix_set_color_keys(PIN_2,     LEDGOLD);
-    rgb_matrix_set_color_keys(PIN_3,     LEDYELL);
-    rgb_matrix_set_color_keys(PIN_4,     LEDCHAR);
-    rgb_matrix_set_color_keys(PIN_5,     LEDGREE);
-    rgb_matrix_set_color_keys(PIN_6,     LEDFOAM);
-    rgb_matrix_set_color_keys(PIN_7,     LEDTEAL);
-    rgb_matrix_set_color_keys(PIN_8,     LEDAZUR);
-    rgb_matrix_set_color_keys(PIN_9,     LEDBLUE);
-    rgb_matrix_set_color_keys(PIN_0,     LEDPURP);
-    rgb_matrix_set_color_keys(PIN_MINUS, LEDMAGE);
-    rgb_matrix_set_color_keys(PIN_EQUAL, LEDPINK);
+    rgb_matrix_set_color_keys(PIN_ESC, LED_RED);
+    rgb_matrix_set_color_keys(PIN_F1 , LEDORAN);
+    rgb_matrix_set_color_keys(PIN_F2 , LEDGOLD);
+    rgb_matrix_set_color_keys(PIN_F3 , LEDYELL);
+    rgb_matrix_set_color_keys(PIN_F4 , LEDCHAR);
+    rgb_matrix_set_color_keys(PIN_F5 , LEDGREE);
+    rgb_matrix_set_color_keys(PIN_F6 , LEDFOAM);
+    rgb_matrix_set_color_keys(PIN_F7 , LEDTEAL);
+    rgb_matrix_set_color_keys(PIN_F8 , LEDAZUR);
+    rgb_matrix_set_color_keys(PIN_F9 , LEDBLUE);
+    rgb_matrix_set_color_keys(PIN_F10, LEDPURP);
+    rgb_matrix_set_color_keys(PIN_F11, LEDMAGE);
+    rgb_matrix_set_color_keys(PIN_F12, LEDPINK);
 }
 
 void encoder_action_user_volume(bool clockwise) {

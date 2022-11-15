@@ -232,12 +232,22 @@ void keyboard_post_init_user(void) {
 
 // Called on start
 void dynamic_macro_record_start_user(void) {
-    dprint("-- Recording Initiallized\n");
-
+    // layer_on(_DYNAMIC);
     eeconfig_init_user();
 }
 
 
+// Called when layer state changes
+layer_state_t layer_state_set_user(layer_state_t state) {
+    user_config.MEDIAKY_STATE = IS_LAYER_ON_STATE(state, _MEDIAKY);
+    user_config.MOUSEKY_STATE = IS_LAYER_ON_STATE(state, _MOUSEKY);
+    eeconfig_update_user(user_config.raw);
+
+    return state;
+}
+
+
+// Sets the layer color if it's enabled
 void set_layer_color(int layer) {
     if (IS_LAYER_OFF(layer)) { return; }
 
@@ -350,18 +360,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 // digitizer_send_update(0.75, 0.5, 1);
             }
             return false;
-        case TOG_MED:
-            if (record->event.pressed) {
-                user_config.MEDIAKY_STATE ^=1;
-                eeconfig_update_user(user_config.raw);
-            }
-            return true;
-        case TOG_MOU:
-            if (record->event.pressed) {
-                user_config.MOUSEKY_STATE ^=1;
-                eeconfig_update_user(user_config.raw);
-            }
-            return true;
         case RGB_TOG:
             if (record->event.pressed) {
                 switch (rgb_matrix_get_flags()) {

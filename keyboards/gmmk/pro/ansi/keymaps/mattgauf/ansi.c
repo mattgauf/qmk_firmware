@@ -15,7 +15,7 @@
  */
 
 // clang-format off
-#include "ansi.h"
+#include "ansi.h" // IWYU pragma: keep
 
 #ifdef RGB_MATRIX_ENABLE
 led_config_t PROGMEM g_led_config = {{

@@ -8,6 +8,8 @@ from milc import cli
 from qmk.keyboard import find_keyboard_from_dir
 from qmk.keymap import find_keymap_from_dir
 
+import warnings ;
+warnings.warn = lambda *args,**kwargs: None
 
 def automagic_keyboard(func):
     """Sets `cli.config.<subcommand>.keyboard` based on environment.

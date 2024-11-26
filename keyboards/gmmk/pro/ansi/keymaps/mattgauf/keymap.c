@@ -14,7 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 // clang-format off
-#include QMK_KEYBOARD_H
+#include QMK_KEYBOARD_H      // IWYU pragma: keep
 #include "keymap_helpers.h"
 #include "raw_hid.h"
 #include "digitizer.h"
@@ -349,8 +349,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return false;
         case MG_MAC1:
             if (record->event.pressed) {
-                tap_code16(KC_MPLY);
-                tap_code(KC_K);
+                // tap_code16(KC_MPLY);
+                // tap_code(KC_K);
             }
             return false;
         case MG_MAC2:
@@ -420,7 +420,7 @@ void digitizer_send(void) {
 }
 
 
-//
+// Commit the digitizer update
 void digitizer_send_finish(void) {
     digitizer_send();
 
@@ -438,4 +438,5 @@ void digitizer_send_update(float x, float y, int8_t tipswitch) {
     digitizer.status   |= DZ_UPDATED;
     digitizer_send_finish();
 }
+
 // clang-format on

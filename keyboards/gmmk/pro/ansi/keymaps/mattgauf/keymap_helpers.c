@@ -14,10 +14,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include QMK_KEYBOARD_H
+#include QMK_KEYBOARD_H      // IWYU pragma: keep
 #include "keymap_helpers.h"
 #include "rgb_matrix.h"
-#include "digitizer.h"
+#include "digitizer.h"       // IWYU pragma: keep
 
 
 // static uint8_t  rgb_pin_fn_column[]      = {PIN_DEL,PIN_PGUP,PIN_PGDN,PIN_END};

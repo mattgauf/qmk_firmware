@@ -17,9 +17,9 @@
 // clang-format off
 #pragma once
 
-#include <inttypes.h>
+#include <inttypes.h>          // IWYU pragma: keep
 #include "rgb_matrix_types.h"
-#include "digitizer.h"
+#include "digitizer.h"         // IWYU pragma: keep
 
 /* LED matrix color flag helpers */
 #define RGB_FLAG_ALL  (LED_FLAG_ALL)
